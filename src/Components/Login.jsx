@@ -1,69 +1,69 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import React, { Component } from "react";
 import {Form, Button, Container, Row, Col} from 'react-bootstrap'
-import AuthService from '../Services/AuthService';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { userActions } from '../Auctions/user.auctions';
 
 
+function Login() {
+  const [inputs, setInputs] = useState({
+      username: '',
+      password: ''
+    });
+  const [submitted, setSubmitted] = useState(false);
+  const { username, password } = inputs;
+  const loggingIn = useSelector(state => state.authentication.loggingIn);
+  const dispatch = useDispatch();
+  const location = useLocation();
 
-export default class Login extends Component {
-    constructor(props) {
-      super(props);
-      this.handleLogin = this.handleLogin.bind(this);
-      this.onChangeUsername = this.onChangeUsername.bind(this);
-      this.onChangePassword = this.onChangePassword.bind(this);
-  
-      this.state = {
-        username: "",
-        password: "",
-      };
-    }
-  
-    onChangeUsername(e) {
-      this.setState({
-        username: e.target.value
-      });
-    }
-  
-    onChangePassword(e) {
-      this.setState({
-        password: e.target.value
-      });
-    }
-  
-    handleLogin(e) {
+  // reset login status
+  useEffect(() => { 
+      dispatch(userActions.logout()); 
+    }, []);
+
+  function handleChange(e) {
+      const { name, value } = e.target;
+      setInputs(inputs => ({ ...inputs, [name]: value }));
+  }
+
+  function handleSubmit(e) {
       e.preventDefault();
-  
-        AuthService.login(this.state.username, this.state.password).then(
-            () => {
-                console.log('AfterService')
-            });
-    }
 
-    render() {
-        return(
-            <>
-                <Container>
-                    <Row className="mt-5">
-                        <Col lg={5} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
-                            <Form onSubmit={this.handleLogin}>
-                                <Form.Group className="mb-3" controlId="formBasicEmail">
-                                    <Form.Label>Email address</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email"  value={this.state.username} onChange={this.onChangeUsername} />
-                                </Form.Group>
+      setSubmitted(true);
+      if (username && password) {
+          // get return url from location state or default to home page
+          const { from } = location.state || { from: { pathname: "/" } };
+          dispatch(userActions.login(username, password, from));
+      }
+  }
+  return(
+      <>
+        <Container>
+            <Row className="mt-5">
+                <Col lg={5} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control type="email" placeholder="Enter email"  value={username} onChange={handleChange} />
+                        </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="formBasicPassword" >
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" placeholder="Password"  value={this.state.password} onChange={this.onChangePassword}/>
-                                </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicPassword" >
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password"  value={username} onChange={handleChange}/>
+                        </Form.Group>
 
-                                <Button variant="primary" type="submit">
-                                    Login
-                                </Button>
-                            </Form>
-                        </Col>
-                    </Row>
-                </Container>
-            </>
+                        <Button variant="primary" type="submit">
+                            Login
+                        </Button>
+                        <Link to="/register" className="btn btn-link">Register</Link>
+                    </Form>
+                </Col>
+            </Row>
+        </Container>
+      </>
     );
-    }
+      
 }
+export default  Login ;
