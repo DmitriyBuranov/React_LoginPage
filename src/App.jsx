@@ -1,16 +1,15 @@
 import React from 'react';
 import { Container } from 'react-bootstrap'
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
-import { createBrowserHistory } from 'history'
 import  PrivateRoute from './Services/PrivateRoute'
 
 import Login from "./Components/Login"
 import Register from "./Components/Register"
 import Home from "./Components/Home"
+import { history } from './Services/history'
 
 
 
-const history = createBrowserHistory();
 
 const App=() => {
 

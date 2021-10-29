@@ -1,8 +1,6 @@
 import { userConstants } from '../Data/user.constants';
 import { userService } from '../Services/user.service';
-import { createBrowserHistory } from 'history';
-
-const history = createBrowserHistory();
+import { history } from '../Services/history'
 
 export const userActions = {
     login,

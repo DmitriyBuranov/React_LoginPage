@@ -10,7 +10,7 @@ function Login() {
       username: '',
       password: ''
     });
-  const [submitted, setSubmitted] = useState(false);
+  //const [submitted, setSubmitted] = useState(false);
   const { username, password } = inputs;
   const loggingIn = useSelector(state => state.authentication.loggingIn);
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ function Login() {
   function handleSubmit(e) {
       e.preventDefault();
 
-      setSubmitted(true);
+      //setSubmitted(true);
       if (username && password) {
           // get return url from location state or default to home page
           const { from } = location.state || { from: { pathname: "/" } };
